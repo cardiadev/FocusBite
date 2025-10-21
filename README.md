@@ -11,6 +11,7 @@ A modern React Native mobile application built with Expo for tracking nutrition,
 - 👤 **User Profile**: Customize preferences, manage settings, and view statistics
 - 🌓 **Light/Dark Mode**: Automatic theme detection with manual override support
 - 🎨 **Modern UI**: Clean interface with light purple (#B39DDB) primary color and consistent design system
+- 🎬 **Animated Splash**: Lottie animation with fade out effect on app launch
 
 ## Tech Stack
 
@@ -83,6 +84,23 @@ FocusBite/
 - `npm run ios` - Run on iOS simulator
 - `npm run web` - Run in web browser
 - `npm run lint` - Run ESLint
+
+### 🎬 Customize Splash Screen
+
+Your app includes an animated splash screen with:
+- **Animated gradient background** with #9785EB as primary color
+- **Smooth position animation** (8 seconds per cycle) - like CSS background-position
+- **No visible edges or stripes** during animation
+- **Customizable Lottie animation** in the center
+- **Fade out transition** after 3 seconds
+
+**To add your Lottie animation:**
+1. Open `assets/animations/splash.json`
+2. Replace the content with your Lottie JSON animation
+3. Reload the app (press `r` in Expo terminal)
+
+**Customize colors, speed, duration:**
+See detailed guide: **[docs/SPLASH_ANIMATION.md](docs/SPLASH_ANIMATION.md)**
 
 ## Design System
 

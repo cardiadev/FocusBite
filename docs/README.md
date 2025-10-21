@@ -19,6 +19,13 @@ Comprehensive development guide with architecture details.
 - Code style guidelines
 - Troubleshooting
 
+### 🎬 [SPLASH_ANIMATION.md](SPLASH_ANIMATION.md)
+Complete guide for customizing the animated splash screen.
+- How to add your Lottie animation
+- Customize gradient colors
+- Adjust animation speed and duration
+- Examples and troubleshooting
+
 ### ✅ [ITERATION_1_COMPLETE.md](ITERATION_1_COMPLETE.md)
 Detailed summary of what was built in Iteration 1.
 - Complete file structure

@@ -7,3 +7,5 @@
 export { storageService, STORAGE_KEYS } from './storage.service';
 export { goalsService } from './goals.service';
 export { nutritionLogsService, exerciseLogsService } from './activities.service';
+export { mealPrepService } from './mealPrep.service';
+export { notificationsService } from './notifications.service';

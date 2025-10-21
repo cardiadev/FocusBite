@@ -12,7 +12,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -20,7 +19,7 @@ import { Spacing } from '@/constants/Spacing';
 import { Typography } from '@/constants/Typography';
 
 export default function HomeScreen() {
-  const { colors, isDark, toggleTheme } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -133,21 +132,6 @@ export default function HomeScreen() {
             />
           </View>
         </View>
-
-        {/* Theme Toggle (for testing) */}
-        <TouchableOpacity
-          style={[styles.themeToggle, { backgroundColor: colors.surfaceVariant }]}
-          onPress={toggleTheme}
-        >
-          <Ionicons
-            name={isDark ? 'sunny' : 'moon'}
-            size={24}
-            color={colors.text}
-          />
-          <Text style={[styles.themeToggleText, { color: colors.text }]}>
-            Toggle {isDark ? 'Light' : 'Dark'} Mode
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -382,18 +366,5 @@ const styles = StyleSheet.create({
       fontWeight: Typography.fontWeight.medium,
       marginTop: Spacing.sm,
       textAlign: 'center',
-    },
-    themeToggle: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: Spacing.md,
-      borderRadius: Spacing.borderRadius.md,
-      marginTop: Spacing.md,
-    },
-    themeToggleText: {
-      fontSize: Typography.fontSize.base,
-      fontWeight: Typography.fontWeight.medium,
-      marginLeft: Spacing.sm,
     },
   });

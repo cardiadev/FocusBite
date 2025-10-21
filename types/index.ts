@@ -208,27 +208,99 @@ export interface ExerciseLog {
 // Meal Prep Types
 // ============================================================================
 
-export interface MealPrepPlan {
+export type StorageLocation = 'refrigerator' | 'freezer';
+export type PortionStatus = 'available' | 'consumed' | 'expired';
+
+/**
+ * Individual portion with storage and expiration tracking
+ */
+export interface MealPortion {
+  id: string;
+  location: StorageLocation;
+  expirationDate: string; // ISO date string
+  status: PortionStatus;
+  consumedAt?: string; // ISO date string (when marked as consumed)
+  notes?: string;
+}
+
+/**
+ * Main MealPrep entry with portion tracking
+ */
+export interface MealPrep {
   id: string;
   name: string;
   description?: string;
-  meals: MealPrepItem[];
-  weekStartDate: Date;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  
+  // Preparation details
+  prepDate: string; // ISO date string
+  totalPortions: number;
+  
+  // Portions tracking
+  portions: MealPortion[];
+  
+  // Nutritional info (optional)
+  nutritionPerPortion?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+  };
+  
+  // Recipe details (optional)
+  ingredients?: string[];
+  instructions?: string[];
+  prepTime?: number; // minutes
+  
+  // Tags and categorization
+  mealType?: MealType;
+  tags?: string[];
+  photoUri?: string;
+  
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface MealPrepItem {
-  id: string;
-  name: string;
-  ingredients: string[];
-  prepTime: number;     // minutes
-  servings: number;
-  mealType: MealType;
-  dayOfWeek: DayOfWeek;
-  isCompleted: boolean;
+/**
+ * Storage defaults (editable by user)
+ */
+export interface StorageDefaults {
+  refrigeratorDays: number; // Default: 2 days
+  freezerDays: number; // Default: 30 days
 }
+
+/**
+ * Example MealPrep:
+ * {
+ *   id: 'meal_123',
+ *   name: 'Chicken Breast Meal Prep',
+ *   description: 'Grilled chicken with vegetables',
+ *   prepDate: '2025-01-20',
+ *   totalPortions: 10,
+ *   portions: [
+ *     {
+ *       id: 'portion_1',
+ *       location: 'refrigerator',
+ *       expirationDate: '2025-01-22',
+ *       status: 'available',
+ *     },
+ *     {
+ *       id: 'portion_2',
+ *       location: 'freezer',
+ *       expirationDate: '2025-02-19',
+ *       status: 'available',
+ *     },
+ *   ],
+ *   nutritionPerPortion: {
+ *     calories: 350,
+ *     protein: 35,
+ *     carbs: 25,
+ *     fats: 12,
+ *   },
+ *   createdAt: '2025-01-20T10:00:00.000Z',
+ *   updatedAt: '2025-01-20T10:00:00.000Z',
+ * }
+ */
 
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
@@ -350,4 +422,24 @@ export interface ActivityFilters {
   goalId?: string;
   dateRange?: DateRange;
   type?: 'nutrition' | 'exercise';
+}
+
+// ============================================================================
+// Notification Types
+// ============================================================================
+
+export interface NotificationConfig {
+  id: string;
+  mealPrepId: string;
+  portionId: string;
+  scheduledFor: string; // ISO date string
+  title: string;
+  body: string;
+  data?: Record<string, any>;
+}
+
+export interface NotificationPermissions {
+  granted: boolean;
+  canAskAgain: boolean;
+  status: 'granted' | 'denied' | 'undetermined';
 }

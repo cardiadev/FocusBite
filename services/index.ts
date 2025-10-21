@@ -9,3 +9,4 @@ export { goalsService } from './goals.service';
 export { nutritionLogsService, exerciseLogsService } from './activities.service';
 export { mealPrepService } from './mealPrep.service';
 export { notificationsService } from './notifications.service';
+export { prepTasksService, shoppingItemsService, recipeIdeasService } from './mealPrepPlanning.service';

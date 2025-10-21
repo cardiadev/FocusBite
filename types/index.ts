@@ -305,6 +305,83 @@ export interface StorageDefaults {
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 // ============================================================================
+// Meal Prep Planning Types (Weekly planning, tasks, shopping)
+// ============================================================================
+
+/**
+ * Prep Task - Individual meal prep task
+ */
+export interface PrepTask {
+  id: string;
+  title: string;
+  servings: number;
+  prepTime: number; // minutes
+  isCompleted: boolean;
+  completedAt?: string; // ISO date string
+  dayOfWeek?: DayOfWeek;
+  mealType?: MealType;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Shopping List Item
+ */
+export interface ShoppingItem {
+  id: string;
+  name: string;
+  quantity: string;
+  category?: 'protein' | 'vegetables' | 'grains' | 'dairy' | 'fruits' | 'other';
+  isChecked: boolean;
+  checkedAt?: string; // ISO date string
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Recipe Idea
+ */
+export interface RecipeIdea {
+  id: string;
+  title: string;
+  description?: string;
+  prepTime: number; // minutes
+  cookTime?: number; // minutes
+  servings: number;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  ingredients?: string[];
+  instructions?: string[];
+  nutritionPerServing?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+  };
+  tags?: string[];
+  imageUrl?: string;
+  isFavorite: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * Weekly Meal Plan
+ */
+export interface WeeklyMealPlan {
+  id: string;
+  weekStart: string; // ISO date string (Monday)
+  weekEnd: string; // ISO date string (Sunday)
+  prepTasks: PrepTask[];
+  shoppingItems: ShoppingItem[];
+  notes?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================================================
 // User Profile Types
 // ============================================================================
 

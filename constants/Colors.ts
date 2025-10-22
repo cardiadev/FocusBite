@@ -1,6 +1,6 @@
 /**
  * Color Palette for FocusBite Application
- * Primary: Light Purple (#B39DDB) - Represents focus and calm
+ * Primary: Deep Purple (#6E34D2) - Represents focus and calm
  * Text: Dark Gray (#424242) - Ensures readability
  * 
  * This file defines the complete color scheme for both light and dark modes,
@@ -52,9 +52,9 @@ export interface ColorPalette {
 export const Colors: { light: ColorPalette; dark: ColorPalette } = {
   light: {
     // Primary Colors
-    primary: '#B39DDB',          // Light purple - main brand color
-    primaryDark: '#9575CD',      // Darker purple for pressed states
-    primaryLight: '#D1C4E9',     // Lighter purple for backgrounds
+    primary: '#6E34D2',          // Deep purple - main brand color
+    primaryDark: '#5A2AB5',      // Darker purple for pressed states
+    primaryLight: '#8E5FE8',     // Lighter purple for backgrounds
     
     // Text Colors
     text: '#424242',             // Dark gray - primary text
@@ -87,15 +87,15 @@ export const Colors: { light: ColorPalette; dark: ColorPalette } = {
     
     // Tab Bar
     tabBarBackground: '#FFFFFF',
-    tabBarActive: '#B39DDB',
+    tabBarActive: '#6E34D2',
     tabBarInactive: '#9E9E9E',
   },
   
   dark: {
     // Primary Colors
-    primary: '#B39DDB',          // Keep primary consistent
-    primaryDark: '#7E57C2',      // Darker for pressed states
-    primaryLight: '#D1C4E9',     // Lighter variant
+    primary: '#9087F0',          // Lighter purple for dark mode contrast
+    primaryDark: '#7B6DD9',      // Darker for pressed states
+    primaryLight: '#A99DF3',     // Lighter variant
     
     // Text Colors
     text: '#E0E0E0',             // Light gray - primary text
@@ -128,7 +128,7 @@ export const Colors: { light: ColorPalette; dark: ColorPalette } = {
     
     // Tab Bar
     tabBarBackground: '#1E1E1E',
-    tabBarActive: '#B39DDB',
+    tabBarActive: '#9087F0',
     tabBarInactive: '#808080',
   },
 };

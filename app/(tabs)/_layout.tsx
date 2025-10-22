@@ -12,7 +12,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { Spacing } from '@/constants/Spacing';
 
 export default function TabLayout() {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Tabs
@@ -38,12 +38,15 @@ export default function TabLayout() {
           backgroundColor: colors.background,
           borderBottomColor: colors.border,
           borderBottomWidth: 1,
+          height: Platform.OS === 'ios' ? 60 : 56,
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
           fontWeight: '600',
           fontSize: 18,
         },
+        headerTitle: '',
+        headerTransparent: false,
         
         // Behavior
         tabBarHideOnKeyboard: Platform.OS !== 'ios',
@@ -54,7 +57,6 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          headerTitle: 'FocusBite',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -66,7 +68,6 @@ export default function TabLayout() {
         name="nutrition"
         options={{
           title: 'Nutrition',
-          headerTitle: 'Nutrition Tracking',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="nutrition" size={size} color={color} />
           ),
@@ -78,7 +79,6 @@ export default function TabLayout() {
         name="exercise"
         options={{
           title: 'Exercise',
-          headerTitle: 'Exercise Tracking',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="barbell" size={size} color={color} />
           ),
@@ -90,7 +90,6 @@ export default function TabLayout() {
         name="meal-prep"
         options={{
           title: 'Meal Prep',
-          headerTitle: 'Meal Prep',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="restaurant" size={size} color={color} />
           ),
@@ -102,7 +101,6 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          headerTitle: 'Profile & Settings',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

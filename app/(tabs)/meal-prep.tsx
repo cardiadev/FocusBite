@@ -5,27 +5,71 @@
  * and prep schedule for the week.
  */
 
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Alert,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@/hooks/useTheme';
-import { usePrepTasks, useShoppingItems, useRecipeIdeas } from '@/hooks/useMealPrepPlanning';
 import { Spacing } from '@/constants/Spacing';
 import { Typography } from '@/constants/Typography';
+import { usePrepTasks, useRecipeIdeas, useShoppingItems } from '@/hooks/useMealPrepPlanning';
+import { useTheme } from '@/hooks/useTheme';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Alert,
+  Animated,
+  Dimensions,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Helper function to get current week dates
+const getCurrentWeekDates = () => {
+  const today = new Date();
+  const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const dates = [];
+  
+  // Get dates for the entire week starting from Sunday
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - currentDay + i);
+    dates.push(date);
+  }
+  
+  return dates;
+};
+
+// Helper function to format week date range
+const getWeekDateRange = () => {
+  const dates = getCurrentWeekDates();
+  const startDate = dates[0];
+  const endDate = dates[6];
+  
+  const startMonth = MONTH_NAMES[startDate.getMonth()];
+  const endMonth = MONTH_NAMES[endDate.getMonth()];
+  const startDay = startDate.getDate();
+  const endDay = endDate.getDate();
+  const year = endDate.getFullYear();
+  
+  // If same month, show: "Jan 20 - 26, 2025"
+  // If different months, show: "Jan 28 - Feb 3, 2025"
+  if (startMonth === endMonth) {
+    return `${startMonth} ${startDay} - ${endDay}, ${year}`;
+  } else {
+    return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${year}`;
+  }
+};
 
 export default function MealPrepScreen() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   
   // Hooks for data management
   const { tasks, toggleTaskCompletion, createTask, deleteTask, completedCount, totalCount } = usePrepTasks();
@@ -36,6 +80,40 @@ export default function MealPrepScreen() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showShoppingModal, setShowShoppingModal] = useState(false);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
+  
+  // Selected day state
+  const today = new Date();
+  const [selectedDay, setSelectedDay] = useState(today.getDay()); // Default to today
+  const weekDates = getCurrentWeekDates();
+  
+  // Animation refs for modals
+  const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
+  
+  const backdropOpacity2 = useRef(new Animated.Value(0)).current;
+  const slideAnim2 = useRef(new Animated.Value(Dimensions.get('window').height)).current;
+  
+  const backdropOpacity3 = useRef(new Animated.Value(0)).current;
+  const slideAnim3 = useRef(new Animated.Value(Dimensions.get('window').height)).current;
+  
+  // Helper function to get tasks for a specific day
+  const getTasksForDay = (dayIndex: number) => {
+    // Filter tasks by day - in a real app, tasks would have a dayOfWeek property
+    // For now, we'll simulate this by assigning tasks to days based on their index
+    return tasks.filter((task, index) => {
+      // Simulate day assignment - distribute tasks across the week
+      const taskDay = index % 7;
+      return taskDay === dayIndex;
+    });
+  };
+  
+  // Helper function to get tasks count per day
+  const getTasksCountForDay = (dayIndex: number) => {
+    return getTasksForDay(dayIndex).length;
+  };
+  
+  // Get tasks for selected day
+  const selectedDayTasks = getTasksForDay(selectedDay);
   
   // Form states
   const [taskTitle, setTaskTitle] = useState('');
@@ -50,6 +128,116 @@ export default function MealPrepScreen() {
   const [recipePrepTime, setRecipePrepTime] = useState('30');
   
   // Handlers for prep tasks
+  // Modal animation effects
+  useEffect(() => {
+    if (showTaskModal) {
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          damping: 25,
+          mass: 1,
+          stiffness: 120,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [showTaskModal]);
+  
+  useEffect(() => {
+    if (showShoppingModal) {
+      Animated.parallel([
+        Animated.timing(backdropOpacity2, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim2, {
+          toValue: 0,
+          damping: 25,
+          mass: 1,
+          stiffness: 120,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [showShoppingModal]);
+  
+  useEffect(() => {
+    if (showRecipeModal) {
+      Animated.parallel([
+        Animated.timing(backdropOpacity3, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim3, {
+          toValue: 0,
+          damping: 25,
+          mass: 1,
+          stiffness: 120,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [showRecipeModal]);
+  
+  // Modal close handlers with animation
+  const handleCloseTaskModal = () => {
+    Animated.parallel([
+      Animated.timing(backdropOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: Dimensions.get('window').height,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowTaskModal(false);
+    });
+  };
+  
+  const handleCloseShoppingModal = () => {
+    Animated.parallel([
+      Animated.timing(backdropOpacity2, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim2, {
+        toValue: Dimensions.get('window').height,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowShoppingModal(false);
+    });
+  };
+  
+  const handleCloseRecipeModal = () => {
+    Animated.parallel([
+      Animated.timing(backdropOpacity3, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim3, {
+        toValue: Dimensions.get('window').height,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setShowRecipeModal(false);
+    });
+  };
+  
   const handleAddTask = async () => {
     if (!taskTitle.trim()) {
       Alert.alert('Error', 'Please enter a task title');
@@ -66,7 +254,7 @@ export default function MealPrepScreen() {
     setTaskTitle('');
     setTaskServings('4');
     setTaskPrepTime('30');
-    setShowTaskModal(false);
+    handleCloseTaskModal();
   };
   
   const handleDeleteTask = (id: string, title: string) => {
@@ -95,7 +283,7 @@ export default function MealPrepScreen() {
     
     setItemName('');
     setItemQuantity('');
-    setShowShoppingModal(false);
+    handleCloseShoppingModal();
   };
   
   const handleClearChecked = () => {
@@ -126,7 +314,7 @@ export default function MealPrepScreen() {
     setRecipeTitle('');
     setRecipeServings('4');
     setRecipePrepTime('30');
-    setShowRecipeModal(false);
+    handleCloseRecipeModal();
   };
   
   const handleDeleteRecipe = (id: string, title: string) => {
@@ -142,24 +330,25 @@ export default function MealPrepScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Active Plan Summary */}
-        <View style={[styles.planCard, { backgroundColor: colors.surfaceVariant }]}>
+        <View style={[styles.planCard, { backgroundColor: colors.primary }]}>
           <View style={styles.planHeader}>
-            <View>
-              <Text style={[styles.planTitle, { color: colors.text }]}>
-                Weekly Meal Plan
-              </Text>
-              <Text style={[styles.planSubtitle, { color: colors.textSecondary }]}>
-                Jan 20 - Jan 26, 2025
-              </Text>
+            <View style={styles.planHeaderContent}>
+              <Ionicons name="calendar" size={24} color="#FFFFFF" style={styles.planIcon} />
+              <View>
+                <Text style={[styles.planTitle, { color: '#FFFFFF' }]}>
+                  Weekly Meal Plan
+                </Text>
+                <Text style={[styles.planSubtitle, { color: 'rgba(255, 255, 255, 0.9)' }]}>
+                  {getWeekDateRange()}
+                </Text>
+              </View>
             </View>
-            <TouchableOpacity>
-              <Ionicons name="create-outline" size={24} color={colors.primary} />
-            </TouchableOpacity>
           </View>
 
           <View style={styles.planStats}>
@@ -167,25 +356,27 @@ export default function MealPrepScreen() {
               icon="restaurant"
               value={totalCount.toString()}
               label="Prep Tasks"
-              textColor={colors.text}
-              secondaryTextColor={colors.textSecondary}
-              iconColor={colors.primary}
+              textColor="#FFFFFF"
+              secondaryTextColor="rgba(255, 255, 255, 0.85)"
+              iconColor="#FFFFFF"
             />
+            <View style={[styles.statDivider, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]} />
             <PlanStat
               icon="checkmark-circle"
               value={completedCount.toString()}
               label="Completed"
-              textColor={colors.text}
-              secondaryTextColor={colors.textSecondary}
-              iconColor={colors.success}
+              textColor="#FFFFFF"
+              secondaryTextColor="rgba(255, 255, 255, 0.85)"
+              iconColor="#FFFFFF"
             />
+            <View style={[styles.statDivider, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]} />
             <PlanStat
               icon="cart"
               value={uncheckedCount.toString()}
               label="To Buy"
-              textColor={colors.text}
-              secondaryTextColor={colors.textSecondary}
-              iconColor={colors.info}
+              textColor="#FFFFFF"
+              secondaryTextColor="rgba(255, 255, 255, 0.85)"
+              iconColor="#FFFFFF"
             />
           </View>
         </View>
@@ -206,35 +397,43 @@ export default function MealPrepScreen() {
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.calendar}>
-              {DAYS.map((day, index) => (
-                <DayCard
-                  key={day}
-                  day={day}
-                  date={20 + index}
-                  isToday={index === 1}
-                  mealsCount={index % 2 === 0 ? 3 : 2}
-                  backgroundColor={colors.surfaceVariant}
-                  textColor={colors.text}
-                  secondaryTextColor={colors.textSecondary}
-                  activeColor={colors.primary}
-                />
-              ))}
+              {weekDates.map((date, index) => {
+                const isToday = date.toDateString() === today.toDateString();
+                const isSelected = index === selectedDay;
+                return (
+                  <TouchableOpacity key={index} onPress={() => setSelectedDay(index)}>
+                    <DayCard
+                      day={DAY_NAMES[date.getDay()]}
+                      date={date.getDate()}
+                      isToday={isToday}
+                      isSelected={isSelected}
+                      mealsCount={getTasksCountForDay(index)}
+                      backgroundColor={isSelected ? colors.primary : colors.surfaceVariant}
+                      textColor={isSelected ? "#FFFFFF" : colors.text}
+                      secondaryTextColor={isSelected ? "#FFFFFF" : colors.textSecondary}
+                      activeColor={colors.primary}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </ScrollView>
         </View>
 
         {/* Today's Meal Prep */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Today's Prep Tasks
-          </Text>
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {DAYS[selectedDay]}&apos;s Prep Tasks
+            </Text>
+          </View>
           
-          {tasks.length === 0 ? (
+          {selectedDayTasks.length === 0 ? (
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              No prep tasks yet. Tap + to add one!
+              No prep tasks for {DAYS[selectedDay]}. Tap + to add one!
             </Text>
           ) : (
-            tasks.map((task) => (
+            selectedDayTasks.map((task) => (
               <PrepTask
                 key={task.id}
                 title={task.title}
@@ -349,175 +548,265 @@ export default function MealPrepScreen() {
       {/* Add Prep Task Modal */}
       <Modal
         visible={showTaskModal}
-        animationType="slide"
+        animationType="none"
         transparent={true}
         onRequestClose={() => setShowTaskModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.modalTitle, { color: colors.text }]}>Add Prep Task</Text>
-            
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-              placeholder="Task name (e.g., Grilled Chicken)"
-              placeholderTextColor={colors.textSecondary}
-              value={taskTitle}
-              onChangeText={setTaskTitle}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <Animated.View 
+            style={[
+              styles.modalOverlay,
+              { opacity: backdropOpacity }
+            ]}
+          >
+            <TouchableOpacity 
+              style={styles.backdropTouchable}
+              activeOpacity={1}
+              onPress={handleCloseTaskModal}
             />
-            
-            <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Servings</Text>
+            <Animated.View
+              style={[
+                styles.modalAnimatedContainer,
+                { transform: [{ translateY: slideAnim }] }
+              ]}
+            >
+              <ScrollView 
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.modalScrollContent}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>Add Prep Task</Text>
+                
                 <TextInput
                   style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-                  placeholder="4"
+                  placeholder="Task name (e.g., Grilled Chicken)"
                   placeholderTextColor={colors.textSecondary}
-                  value={taskServings}
-                  onChangeText={setTaskServings}
-                  keyboardType="number-pad"
+                  value={taskTitle}
+                  onChangeText={setTaskTitle}
                 />
-              </View>
-              
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Prep Time (min)</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-                  placeholder="30"
-                  placeholderTextColor={colors.textSecondary}
-                  value={taskPrepTime}
-                  onChangeText={setTaskPrepTime}
-                  keyboardType="number-pad"
-                />
-              </View>
-            </View>
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
-                onPress={() => setShowTaskModal(false)}
-              >
-                <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.primary }]}
-                onPress={handleAddTask}
-              >
-                <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Task</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+                
+                <View style={styles.row}>
+                  <View style={styles.halfInput}>
+                    <Text style={[styles.label, { color: colors.textSecondary }]}>Servings</Text>
+                    <TextInput
+                      style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                      placeholder="4"
+                      placeholderTextColor={colors.textSecondary}
+                      value={taskServings}
+                      onChangeText={setTaskServings}
+                      keyboardType="number-pad"
+                    />
+                  </View>
+                  
+                  <View style={styles.halfInput}>
+                    <Text style={[styles.label, { color: colors.textSecondary }]}>Prep Time (min)</Text>
+                    <TextInput
+                      style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                      placeholder="30"
+                      placeholderTextColor={colors.textSecondary}
+                      value={taskPrepTime}
+                      onChangeText={setTaskPrepTime}
+                      keyboardType="number-pad"
+                    />
+                  </View>
+                </View>
+                
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
+                    onPress={handleCloseTaskModal}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.primary }]}
+                    onPress={handleAddTask}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Task</Text>
+                  </TouchableOpacity>
+                </View>
+                </View>
+              </ScrollView>
+            </Animated.View>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Modal>
       
       {/* Add Shopping Item Modal */}
       <Modal
         visible={showShoppingModal}
-        animationType="slide"
+        animationType="none"
         transparent={true}
         onRequestClose={() => setShowShoppingModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.modalTitle, { color: colors.text }]}>Add Shopping Item</Text>
-            
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-              placeholder="Item name (e.g., Chicken breast)"
-              placeholderTextColor={colors.textSecondary}
-              value={itemName}
-              onChangeText={setItemName}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <Animated.View 
+            style={[
+              styles.modalOverlay,
+              { opacity: backdropOpacity2 }
+            ]}
+          >
+            <TouchableOpacity 
+              style={styles.backdropTouchable}
+              activeOpacity={1}
+              onPress={handleCloseShoppingModal}
             />
-            
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-              placeholder="Quantity (e.g., 2 lbs)"
-              placeholderTextColor={colors.textSecondary}
-              value={itemQuantity}
-              onChangeText={setItemQuantity}
-            />
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
-                onPress={() => setShowShoppingModal(false)}
+            <Animated.View
+              style={[
+                styles.modalAnimatedContainer,
+                { transform: [{ translateY: slideAnim2 }] }
+              ]}
+            >
+              <ScrollView 
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.modalScrollContent}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
               >
-                <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.primary }]}
-                onPress={handleAddItem}
-              >
-                <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Item</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+                <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>Add Shopping Item</Text>
+                
+                <TextInput
+                  style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                  placeholder="Item name (e.g., Chicken breast)"
+                  placeholderTextColor={colors.textSecondary}
+                  value={itemName}
+                  onChangeText={setItemName}
+                />
+                
+                <TextInput
+                  style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                  placeholder="Quantity (e.g., 2 lbs)"
+                  placeholderTextColor={colors.textSecondary}
+                  value={itemQuantity}
+                  onChangeText={setItemQuantity}
+                />
+                
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
+                    onPress={handleCloseShoppingModal}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.primary }]}
+                    onPress={handleAddItem}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Item</Text>
+                  </TouchableOpacity>
+                </View>
+                </View>
+              </ScrollView>
+            </Animated.View>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Modal>
       
       {/* Add Recipe Modal */}
       <Modal
         visible={showRecipeModal}
-        animationType="slide"
+        animationType="none"
         transparent={true}
         onRequestClose={() => setShowRecipeModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.modalTitle, { color: colors.text }]}>Add Recipe Idea</Text>
-            
-            <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-              placeholder="Recipe name (e.g., Mediterranean Bowl)"
-              placeholderTextColor={colors.textSecondary}
-              value={recipeTitle}
-              onChangeText={setRecipeTitle}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <Animated.View 
+            style={[
+              styles.modalOverlay,
+              { opacity: backdropOpacity3 }
+            ]}
+          >
+            <TouchableOpacity 
+              style={styles.backdropTouchable}
+              activeOpacity={1}
+              onPress={handleCloseRecipeModal}
             />
-            
-            <View style={styles.row}>
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Servings</Text>
+            <Animated.View
+              style={[
+                styles.modalAnimatedContainer,
+                { transform: [{ translateY: slideAnim3 }] }
+              ]}
+            >
+              <ScrollView 
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.modalScrollContent}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>Add Recipe Idea</Text>
+                
                 <TextInput
                   style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-                  placeholder="4"
+                  placeholder="Recipe name (e.g., Mediterranean Bowl)"
                   placeholderTextColor={colors.textSecondary}
-                  value={recipeServings}
-                  onChangeText={setRecipeServings}
-                  keyboardType="number-pad"
+                  value={recipeTitle}
+                  onChangeText={setRecipeTitle}
                 />
-              </View>
-              
-              <View style={styles.halfInput}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Prep Time (min)</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
-                  placeholder="30"
-                  placeholderTextColor={colors.textSecondary}
-                  value={recipePrepTime}
-                  onChangeText={setRecipePrepTime}
-                  keyboardType="number-pad"
-                />
-              </View>
-            </View>
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
-                onPress={() => setShowRecipeModal(false)}
-              >
-                <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={[styles.modalButton, { backgroundColor: colors.primary }]}
-                onPress={handleAddRecipe}
-              >
-                <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Recipe</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+                
+                <View style={styles.row}>
+                  <View style={styles.halfInput}>
+                    <Text style={[styles.label, { color: colors.textSecondary }]}>Servings</Text>
+                    <TextInput
+                      style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                      placeholder="4"
+                      placeholderTextColor={colors.textSecondary}
+                      value={recipeServings}
+                      onChangeText={setRecipeServings}
+                      keyboardType="number-pad"
+                    />
+                  </View>
+                  
+                  <View style={styles.halfInput}>
+                    <Text style={[styles.label, { color: colors.textSecondary }]}>Prep Time (min)</Text>
+                    <TextInput
+                      style={[styles.input, { backgroundColor: colors.surfaceVariant, color: colors.text }]}
+                      placeholder="30"
+                      placeholderTextColor={colors.textSecondary}
+                      value={recipePrepTime}
+                      onChangeText={setRecipePrepTime}
+                      keyboardType="number-pad"
+                    />
+                  </View>
+                </View>
+                
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.surfaceVariant }]}
+                    onPress={handleCloseRecipeModal}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.text }]}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.primary }]}
+                    onPress={handleAddRecipe}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.textOnPrimary }]}>Add Recipe</Text>
+                  </TouchableOpacity>
+                </View>
+                </View>
+              </ScrollView>
+            </Animated.View>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -547,6 +836,7 @@ interface DayCardProps {
   day: string;
   date: number;
   isToday: boolean;
+  isSelected: boolean;
   mealsCount: number;
   backgroundColor: string;
   textColor: string;
@@ -554,21 +844,21 @@ interface DayCardProps {
   activeColor: string;
 }
 
-function DayCard({ day, date, isToday, mealsCount, backgroundColor, textColor, secondaryTextColor, activeColor }: DayCardProps) {
+function DayCard({ day, date, isToday, isSelected, mealsCount, backgroundColor, textColor, secondaryTextColor, activeColor }: DayCardProps) {
   return (
     <View
       style={[
         styles.dayCard,
         { backgroundColor },
-        isToday && { borderColor: activeColor, borderWidth: 2 },
+        isToday && !isSelected && { borderColor: activeColor, borderWidth: 2 },
       ]}
     >
-      <Text style={[styles.dayName, { color: isToday ? activeColor : secondaryTextColor }]}>
+      <Text style={[styles.dayName, { color: isSelected ? textColor : (isToday ? activeColor : secondaryTextColor), fontWeight: isSelected ? 'bold' : '600' }]}>
         {day}
       </Text>
       <Text style={[styles.dayDate, { color: textColor }]}>{date}</Text>
       <Text style={[styles.mealCount, { color: secondaryTextColor }]}>
-        {mealsCount} meals
+        {mealsCount} {mealsCount === 1 ? 'task' : 'tasks'}
       </Text>
     </View>
   );
@@ -707,39 +997,60 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.xl,
   },
   planCard: {
-    padding: Spacing.lg,
-    borderRadius: Spacing.borderRadius.lg,
+    padding: Spacing.xl,
+    borderRadius: Spacing.borderRadius.xl,
     marginBottom: Spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   planHeader: {
+    marginBottom: Spacing.xl,
+  },
+  planHeaderContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: Spacing.lg,
+    alignItems: 'center',
+  },
+  planIcon: {
+    marginRight: Spacing.md,
   },
   planTitle: {
-    fontSize: Typography.fontSize.lg,
-    fontWeight: Typography.fontWeight.semibold,
+    fontSize: Typography.fontSize.xl,
+    fontWeight: Typography.fontWeight.bold,
   },
   planSubtitle: {
     fontSize: Typography.fontSize.sm,
-    marginTop: Spacing.xs,
+    marginTop: 4,
+    fontWeight: '500',
   },
   planStats: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.15)',
   },
   statItem: {
+    flex: 1,
     alignItems: 'center',
     gap: Spacing.xs,
   },
+  statDivider: {
+    width: 1,
+    height: 40,
+    marginHorizontal: Spacing.xs,
+  },
   statValue: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
   },
   statLabel: {
     fontSize: Typography.fontSize.xs,
     textAlign: 'center',
+    fontWeight: '500',
   },
   section: {
     marginBottom: Spacing.lg,
@@ -774,6 +1085,8 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     borderRadius: Spacing.borderRadius.md,
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
   dayName: {
     fontSize: Typography.fontSize.xs,
@@ -814,7 +1127,6 @@ const styles = StyleSheet.create({
   shoppingTitle: {
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
-    marginBottom: Spacing.md,
   },
   itemsList: {
     gap: Spacing.sm,
@@ -872,7 +1184,7 @@ const styles = StyleSheet.create({
   shoppingHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: Spacing.md,
   },
   clearText: {
@@ -901,15 +1213,33 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: Spacing.lg,
+    justifyContent: 'flex-end',
+  },
+  backdropTouchable: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  modalAnimatedContainer: {
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  modalKeyboardView: {
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  modalScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
   },
   modalContent: {
     width: '100%',
-    maxWidth: 400,
-    borderRadius: Spacing.borderRadius.lg,
+    borderTopLeftRadius: Spacing.borderRadius.lg,
+    borderTopRightRadius: Spacing.borderRadius.lg,
     padding: Spacing.xl,
+    paddingBottom: Platform.OS === 'ios' ? Spacing.xl + 20 : Spacing.xl,
   },
   modalTitle: {
     fontSize: Typography.fontSize.xl,

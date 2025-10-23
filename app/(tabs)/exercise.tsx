@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   cardTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.md,
@@ -291,14 +292,17 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   statValue: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
     marginTop: Spacing.xs,
   },
   statUnit: {
-    fontSize: Typography.fontSize.xs,
+    fontFamily: Typography.fontFamily.regular,
+    fontSize: Typography.fontSize.sm,
   },
   statLabel: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
   },
   section: {
@@ -311,10 +315,12 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   sectionTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
   },
   seeAll: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.medium,
   },
@@ -336,11 +342,13 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   activityTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: 4,
   },
   activityValue: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.bold,
   },
@@ -354,6 +362,7 @@ const styles = StyleSheet.create({
     borderColor: '#B39DDB',
   },
   progressPercent: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.bold,
   },
@@ -376,15 +385,18 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   workoutTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: 2,
   },
   workoutDetails: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
     marginBottom: 2,
   },
   workoutDate: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.xs,
   },
   quickStartGrid: {
@@ -401,6 +413,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   quickStartLabel: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.medium,
     marginTop: Spacing.sm,

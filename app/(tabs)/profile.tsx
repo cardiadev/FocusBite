@@ -284,15 +284,18 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   avatarText: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
   },
   name: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.xs,
   },
   email: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.base,
     marginBottom: Spacing.md,
   },
@@ -303,6 +306,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   editButtonText: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.semibold,
   },
@@ -320,10 +324,12 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   statValue: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
   },
   statLabel: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.xs,
     textAlign: 'center',
   },
@@ -332,6 +338,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.screenPadding,
   },
   sectionTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.md,
@@ -350,11 +357,13 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   settingTitle: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.medium,
     marginBottom: 2,
   },
   settingSubtitle: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
   },
   menuButton: {
@@ -365,12 +374,14 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   menuTitle: {
+    fontFamily: Typography.fontFamily.medium,
     flex: 1,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.medium,
     marginLeft: Spacing.md,
   },
   version: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
     textAlign: 'center',
     marginTop: Spacing.lg,

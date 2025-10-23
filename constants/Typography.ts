@@ -6,12 +6,12 @@
  */
 
 export const Typography = {
-  // Font Families (can be extended with custom fonts)
+  // Font Families - Open Sans from Google Fonts (loaded locally)
   fontFamily: {
-    regular: 'System',           // System default
-    medium: 'System',            // Can be replaced with custom fonts
-    semibold: 'System',
-    bold: 'System',
+    regular: 'OpenSans_400Regular',
+    medium: 'OpenSans_500Medium',
+    semibold: 'OpenSans_600SemiBold',
+    bold: 'OpenSans_700Bold',
   },
   
   // Font Sizes
@@ -52,21 +52,25 @@ export const Typography = {
   textStyles: {
     // Headlines
     h1: {
+      fontFamily: 'OpenSans_700Bold',
       fontSize: 36,
       fontWeight: '700' as const,
       lineHeight: 1.2,
     },
     h2: {
+      fontFamily: 'OpenSans_700Bold',
       fontSize: 30,
       fontWeight: '700' as const,
       lineHeight: 1.2,
     },
     h3: {
+      fontFamily: 'OpenSans_600SemiBold',
       fontSize: 24,
       fontWeight: '600' as const,
       lineHeight: 1.3,
     },
     h4: {
+      fontFamily: 'OpenSans_600SemiBold',
       fontSize: 20,
       fontWeight: '600' as const,
       lineHeight: 1.4,
@@ -74,16 +78,19 @@ export const Typography = {
     
     // Body Text
     bodyLarge: {
+      fontFamily: 'OpenSans_400Regular',
       fontSize: 18,
       fontWeight: '400' as const,
       lineHeight: 1.5,
     },
     body: {
+      fontFamily: 'OpenSans_400Regular',
       fontSize: 16,
       fontWeight: '400' as const,
       lineHeight: 1.5,
     },
     bodySmall: {
+      fontFamily: 'OpenSans_400Regular',
       fontSize: 14,
       fontWeight: '400' as const,
       lineHeight: 1.5,
@@ -91,17 +98,20 @@ export const Typography = {
     
     // Special Text
     caption: {
+      fontFamily: 'OpenSans_400Regular',
       fontSize: 12,
       fontWeight: '400' as const,
       lineHeight: 1.4,
     },
     button: {
+      fontFamily: 'OpenSans_600SemiBold',
       fontSize: 16,
       fontWeight: '600' as const,
       lineHeight: 1.2,
       letterSpacing: 0.5,
     },
     label: {
+      fontFamily: 'OpenSans_500Medium',
       fontSize: 14,
       fontWeight: '500' as const,
       lineHeight: 1.4,

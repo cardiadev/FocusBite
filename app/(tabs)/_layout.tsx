@@ -10,6 +10,7 @@ import { Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
 import { Spacing } from '@/constants/Spacing';
+import { Typography } from '@/constants/Typography';
 
 export default function TabLayout() {
   const { colors } = useTheme();
@@ -29,6 +30,7 @@ export default function TabLayout() {
           paddingTop: 8,
         },
         tabBarLabelStyle: {
+          fontFamily: Typography.fontFamily.semibold,
           fontSize: 12,
           fontWeight: '600',
         },
@@ -42,6 +44,7 @@ export default function TabLayout() {
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
+          fontFamily: Typography.fontFamily.semibold,
           fontWeight: '600',
           fontSize: 18,
         },

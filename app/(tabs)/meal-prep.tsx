@@ -1017,10 +1017,12 @@ const styles = StyleSheet.create({
     marginRight: Spacing.md,
   },
   planTitle: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
   },
   planSubtitle: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     marginTop: 4,
     fontWeight: '500',
@@ -1044,10 +1046,12 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.xs,
   },
   statValue: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
   },
   statLabel: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.xs,
     textAlign: 'center',
     fontWeight: '500',
@@ -1062,10 +1066,12 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   sectionTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
   },
   seeAll: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.medium,
   },
@@ -1089,16 +1095,19 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   dayName: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.xs,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.xs,
   },
   dayDate: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
     marginBottom: Spacing.xs,
   },
   mealCount: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.xs,
   },
   taskCard: {
@@ -1113,11 +1122,13 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   taskTitle: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.medium,
     marginBottom: 2,
   },
   taskDetails: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
   },
   shoppingCard: {
@@ -1125,6 +1136,7 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.borderRadius.md,
   },
   shoppingTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
   },
@@ -1138,10 +1150,12 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   itemName: {
+    fontFamily: Typography.fontFamily.regular,
     flex: 1,
     fontSize: Typography.fontSize.base,
   },
   itemQuantity: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
   },
   viewAllButton: {
@@ -1149,6 +1163,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
   },
   viewAllText: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.semibold,
   },
@@ -1162,20 +1177,20 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: Spacing.borderRadius.sm,
     backgroundColor: 'rgba(0,0,0,0.05)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: Spacing.sm,
   },
   recipeTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.xs,
   },
   recipeDetails: {
-    fontSize: Typography.fontSize.sm,
+    fontFamily: Typography.fontFamily.regular,
+    fontSize: Typography.fontSize.xs,
   },
   // New styles
   emptyText: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.base,
     textAlign: 'center',
     paddingVertical: Spacing.lg,
@@ -1188,6 +1203,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   clearText: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.semibold,
   },
@@ -1242,12 +1258,14 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? Spacing.xl + 20 : Spacing.xl,
   },
   modalTitle: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize.xl,
     fontWeight: Typography.fontWeight.bold,
     marginBottom: Spacing.lg,
     textAlign: 'center',
   },
   input: {
+    fontFamily: Typography.fontFamily.regular,
     padding: Spacing.md,
     borderRadius: Spacing.borderRadius.md,
     fontSize: Typography.fontSize.base,
@@ -1261,6 +1279,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     marginBottom: Spacing.xs,
     fontWeight: Typography.fontWeight.medium,
@@ -1277,6 +1296,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalButtonText: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
   },

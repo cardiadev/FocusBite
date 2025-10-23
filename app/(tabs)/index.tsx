@@ -257,11 +257,13 @@ const styles = StyleSheet.create({
       marginBottom: Spacing.lg,
     },
     welcomeText: {
+      fontFamily: Typography.fontFamily.bold,
       fontSize: Typography.fontSize['2xl'],
       fontWeight: Typography.fontWeight.bold,
       marginBottom: Spacing.xs,
     },
     subtitle: {
+      fontFamily: Typography.fontFamily.regular,
       fontSize: Typography.fontSize.base,
       fontWeight: Typography.fontWeight.regular,
     },
@@ -277,6 +279,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     statTitle: {
+      fontFamily: Typography.fontFamily.medium,
       fontSize: Typography.fontSize.sm,
       marginTop: Spacing.sm,
       fontWeight: Typography.fontWeight.medium,
@@ -287,10 +290,12 @@ const styles = StyleSheet.create({
       marginTop: Spacing.xs,
     },
     statValue: {
+      fontFamily: Typography.fontFamily.bold,
       fontSize: Typography.fontSize.xl,
       fontWeight: Typography.fontWeight.bold,
     },
     statTarget: {
+      fontFamily: Typography.fontFamily.regular,
       fontSize: Typography.fontSize.sm,
       marginLeft: Spacing.xs,
     },
@@ -304,10 +309,12 @@ const styles = StyleSheet.create({
       marginBottom: Spacing.md,
     },
     sectionTitle: {
+      fontFamily: Typography.fontFamily.semibold,
       fontSize: Typography.fontSize.lg,
       fontWeight: Typography.fontWeight.semibold,
     },
     seeAll: {
+      fontFamily: Typography.fontFamily.medium,
       fontSize: Typography.fontSize.sm,
       fontWeight: Typography.fontWeight.medium,
     },
@@ -322,6 +329,7 @@ const styles = StyleSheet.create({
       marginBottom: Spacing.sm,
     },
     goalTitle: {
+      fontFamily: Typography.fontFamily.medium,
       fontSize: Typography.fontSize.base,
       fontWeight: Typography.fontWeight.medium,
       marginLeft: Spacing.sm,
@@ -342,6 +350,7 @@ const styles = StyleSheet.create({
       borderRadius: Spacing.borderRadius.full,
     },
     progressText: {
+      fontFamily: Typography.fontFamily.regular,
       fontSize: Typography.fontSize.sm,
       marginLeft: Spacing.sm,
       minWidth: 60,
@@ -362,6 +371,7 @@ const styles = StyleSheet.create({
       minHeight: 100,
     },
     actionLabel: {
+      fontFamily: Typography.fontFamily.medium,
       fontSize: Typography.fontSize.sm,
       fontWeight: Typography.fontWeight.medium,
       marginTop: Spacing.sm,

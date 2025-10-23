@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   cardTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: Spacing.md,
@@ -248,10 +249,12 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.lg,
   },
   calorieValue: {
+    fontFamily: Typography.fontFamily.bold,
     fontSize: Typography.fontSize['3xl'],
     fontWeight: Typography.fontWeight.bold,
   },
   calorieLabel: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.base,
     marginTop: Spacing.xs,
   },
@@ -262,6 +265,7 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   macroLabel: {
+    fontFamily: Typography.fontFamily.medium,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.medium,
   },
@@ -286,6 +290,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   sectionTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
   },
@@ -308,11 +313,13 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.md,
   },
   mealTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginBottom: 2,
   },
   mealDetails: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
   },
   waterCard: {
@@ -325,6 +332,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   waterTitle: {
+    fontFamily: Typography.fontFamily.semibold,
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     marginLeft: Spacing.sm,
@@ -339,6 +347,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   waterProgress: {
+    fontFamily: Typography.fontFamily.regular,
     fontSize: Typography.fontSize.sm,
     textAlign: 'center',
   },

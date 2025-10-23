@@ -317,12 +317,13 @@ export interface PrepTask {
   servings: number;
   prepTime: number; // minutes
   isCompleted: boolean;
-  completedAt?: string; // ISO date string
-  dayOfWeek?: DayOfWeek;
+  completedAt?: string; // ISO 8601: 2025-10-21T21:28:07.658Z
+  scheduledDate?: string; // ISO 8601: 2025-10-21T00:00:00.000Z - specific date for the task
+  dayOfWeek?: DayOfWeek; // Deprecated: use scheduledDate instead
   mealType?: MealType;
   notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string; // ISO 8601: 2025-10-21T21:28:07.658Z
+  updatedAt: string; // ISO 8601: 2025-10-21T21:28:07.658Z
 }
 
 /**

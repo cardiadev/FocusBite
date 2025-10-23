@@ -9,6 +9,8 @@ import { Spacing } from '@/constants/Spacing';
 import { Typography } from '@/constants/Typography';
 import { usePrepTasks, useRecipeIdeas, useShoppingItems } from '@/hooks/useMealPrepPlanning';
 import { useTheme } from '@/hooks/useTheme';
+import { formatDateToStartOfDay, isSameDay } from '@/utils/dateHelpers';
+import { seedPrepTasks, clearPrepTasks } from '@/services/seedData.service';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -72,7 +74,7 @@ export default function MealPrepScreen() {
   const { colors, isDark } = useTheme();
   
   // Hooks for data management
-  const { tasks, toggleTaskCompletion, createTask, deleteTask, completedCount, totalCount } = usePrepTasks();
+  const { tasks, toggleTaskCompletion, createTask, deleteTask, completedCount, totalCount, refetch: refetchTasks } = usePrepTasks();
   const { items, toggleItemChecked, createItem, deleteItem, clearCheckedItems, uncheckedCount } = useShoppingItems();
   const { recipes, toggleFavorite, createRecipe, deleteRecipe } = useRecipeIdeas();
   
@@ -98,12 +100,11 @@ export default function MealPrepScreen() {
   
   // Helper function to get tasks for a specific day
   const getTasksForDay = (dayIndex: number) => {
-    // Filter tasks by day - in a real app, tasks would have a dayOfWeek property
-    // For now, we'll simulate this by assigning tasks to days based on their index
-    return tasks.filter((task, index) => {
-      // Simulate day assignment - distribute tasks across the week
-      const taskDay = index % 7;
-      return taskDay === dayIndex;
+    const selectedDate = weekDates[dayIndex];
+    const selectedDateISO = formatDateToStartOfDay(selectedDate);
+    return tasks.filter((task) => {
+      if (!task.scheduledDate) return false;
+      return isSameDay(task.scheduledDate, selectedDateISO);
     });
   };
   
@@ -201,6 +202,10 @@ export default function MealPrepScreen() {
       }),
     ]).start(() => {
       setShowTaskModal(false);
+      // Reset form
+      setTaskTitle('');
+      setTaskServings('4');
+      setTaskPrepTime('30');
     });
   };
   
@@ -218,6 +223,9 @@ export default function MealPrepScreen() {
       }),
     ]).start(() => {
       setShowShoppingModal(false);
+      // Reset form
+      setItemName('');
+      setItemQuantity('');
     });
   };
   
@@ -235,6 +243,10 @@ export default function MealPrepScreen() {
       }),
     ]).start(() => {
       setShowRecipeModal(false);
+      // Reset form
+      setRecipeTitle('');
+      setRecipeServings('4');
+      setRecipePrepTime('30');
     });
   };
   
@@ -244,17 +256,24 @@ export default function MealPrepScreen() {
       return;
     }
     
-    await createTask({
+    // Get the specific date for the selected day (ISO 8601 at start of day)
+    const selectedDate = weekDates[selectedDay];
+    const scheduledDate = formatDateToStartOfDay(selectedDate);
+    
+    const result = await createTask({
       title: taskTitle,
       servings: parseInt(taskServings) || 4,
       prepTime: parseInt(taskPrepTime) || 30,
       isCompleted: false,
+      scheduledDate: scheduledDate, // ISO 8601: "2025-10-21T00:00:00.000Z"
     });
     
-    setTaskTitle('');
-    setTaskServings('4');
-    setTaskPrepTime('30');
-    handleCloseTaskModal();
+    if (result) {
+      // Success - close modal (form will be reset in handleCloseTaskModal)
+      handleCloseTaskModal();
+    } else {
+      Alert.alert('Error', 'Failed to create task. Please try again.');
+    }
   };
   
   const handleDeleteTask = (id: string, title: string) => {
@@ -426,6 +445,59 @@ export default function MealPrepScreen() {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               {DAYS[selectedDay]}&apos;s Prep Tasks
             </Text>
+            {/* DEV: Seed data buttons */}
+            {__DEV__ && (
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                <TouchableOpacity
+                  onPress={async () => {
+                    try {
+                      const result = await seedPrepTasks();
+                      if (result.success) {
+                        await refetchTasks();
+                        Alert.alert('Success', '7 sample tasks added (one per day)');
+                      } else {
+                        Alert.alert('Error', 'Failed to seed tasks');
+                      }
+                    } catch (error) {
+                      console.error('Seed error:', error);
+                      Alert.alert('Error', 'Failed to seed tasks');
+                    }
+                  }}
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    backgroundColor: colors.primary,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Text style={{ color: '#FFF', fontSize: 10, fontFamily: Typography.fontFamily.semibold }}>Seed</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    try {
+                      const result = await clearPrepTasks();
+                      if (result.success) {
+                        await refetchTasks();
+                        Alert.alert('Success', 'All tasks cleared');
+                      } else {
+                        Alert.alert('Error', 'Failed to clear tasks');
+                      }
+                    } catch (error) {
+                      console.error('Clear error:', error);
+                      Alert.alert('Error', 'Failed to clear tasks');
+                    }
+                  }}
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    backgroundColor: colors.error,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Text style={{ color: '#FFF', fontSize: 10, fontFamily: Typography.fontFamily.semibold }}>Clear</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           
           {selectedDayTasks.length === 0 ? (
